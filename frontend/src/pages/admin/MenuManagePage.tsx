@@ -89,6 +89,7 @@ export default function MenuManagePage() {
             ) : <div style={{ width: 50, height: 50, background: '#f0f0f0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🍽️</div>
         },
         { title: '메뉴명', dataIndex: 'name', key: 'name' },
+        { title: '설명', dataIndex: 'description', key: 'desc', render: (v: string | null) => v || '-', ellipsis: true },
         { title: '가격', dataIndex: 'price', key: 'price', render: (v: number) => `${v.toLocaleString()}원` },
         { title: '카테고리', dataIndex: 'category_id', key: 'cat', render: (v: number) => categories.find((c) => c.id === v)?.name || '-' },
         {

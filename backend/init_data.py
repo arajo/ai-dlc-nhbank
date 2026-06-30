@@ -41,16 +41,16 @@ async def main():
 
         # 4. Create menu items (loremflickr: real food photos, free, direct link)
         menus = [
-            MenuItem(store_id="store-001", category_id=cat1.id, name="김치찌개", price=9000, description="얼큰한 김치찌개", sort_order=0, image_url="https://loremflickr.com/400/300/kimchi,stew"),
-            MenuItem(store_id="store-001", category_id=cat1.id, name="된장찌개", price=8000, description="구수한 된장찌개", sort_order=1, image_url="https://loremflickr.com/400/300/miso,soup"),
-            MenuItem(store_id="store-001", category_id=cat1.id, name="제육볶음", price=10000, description="매콤한 제육볶음", sort_order=2, image_url="https://loremflickr.com/400/300/pork,stir-fry"),
-            MenuItem(store_id="store-001", category_id=cat1.id, name="비빔밥", price=9000, description="야채 비빔밥", sort_order=3, image_url="https://loremflickr.com/400/300/bibimbap"),
-            MenuItem(store_id="store-001", category_id=cat2.id, name="계란말이", price=5000, description="부드러운 계란말이", sort_order=0, image_url="https://loremflickr.com/400/300/egg,omelette"),
-            MenuItem(store_id="store-001", category_id=cat2.id, name="김치전", price=6000, description="바삭한 김치전", sort_order=1, image_url="https://loremflickr.com/400/300/korean,pancake"),
-            MenuItem(store_id="store-001", category_id=cat3.id, name="콜라", price=2000, sort_order=0, image_url="https://loremflickr.com/400/300/coca-cola"),
-            MenuItem(store_id="store-001", category_id=cat3.id, name="사이다", price=2000, sort_order=1, image_url="https://loremflickr.com/400/300/sprite,soda"),
-            MenuItem(store_id="store-001", category_id=cat3.id, name="소주", price=5000, sort_order=2, image_url="https://loremflickr.com/400/300/soju,korean"),
-            MenuItem(store_id="store-001", category_id=cat3.id, name="맥주", price=5000, sort_order=3, image_url="https://loremflickr.com/400/300/beer,glass"),
+            MenuItem(store_id="store-001", category_id=cat1.id, name="김치찌개", price=9000, description="얼큰하게 속이 풀리는 한 그릇", sort_order=0, image_url="https://loremflickr.com/400/300/kimchi,stew"),
+            MenuItem(store_id="store-001", category_id=cat1.id, name="된장찌개", price=8000, description="할머니 손맛 그대로 구수하게", sort_order=1, image_url="https://loremflickr.com/400/300/miso,soup"),
+            MenuItem(store_id="store-001", category_id=cat1.id, name="제육볶음", price=10000, description="매콤 달콤, 밥 한 공기 순삭", sort_order=2, image_url="https://loremflickr.com/400/300/pork,stir-fry"),
+            MenuItem(store_id="store-001", category_id=cat1.id, name="비빔밥", price=9000, description="오늘 하루의 균형을 담았습니다", sort_order=3, image_url="https://loremflickr.com/400/300/bibimbap"),
+            MenuItem(store_id="store-001", category_id=cat2.id, name="계란말이", price=5000, description="한 입에 사르르 녹는 부드러움", sort_order=0, image_url="https://loremflickr.com/400/300/egg,omelette"),
+            MenuItem(store_id="store-001", category_id=cat2.id, name="김치전", price=6000, description="비 오는 날엔 이거지", sort_order=1, image_url="https://loremflickr.com/400/300/korean,pancake"),
+            MenuItem(store_id="store-001", category_id=cat3.id, name="콜라", price=2000, description="톡 쏘는 청량감 한 잔", sort_order=0, image_url="https://loremflickr.com/400/300/coca-cola"),
+            MenuItem(store_id="store-001", category_id=cat3.id, name="사이다", price=2000, description="깔끔하게 입안을 헹구는 한 모금", sort_order=1, image_url="https://loremflickr.com/400/300/sprite,soda"),
+            MenuItem(store_id="store-001", category_id=cat3.id, name="소주", price=5000, description="오늘 하루도 수고했어요", sort_order=2, image_url="https://loremflickr.com/400/300/soju,korean"),
+            MenuItem(store_id="store-001", category_id=cat3.id, name="맥주", price=5000, description="시원하게 한 잔, 걱정은 내일로", sort_order=3, image_url="https://loremflickr.com/400/300/beer,glass"),
         ]
         db.add_all(menus)
         await db.commit()

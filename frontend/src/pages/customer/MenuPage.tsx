@@ -346,6 +346,11 @@ export default function MenuPage() {
                                                     <span className="menu-name">{item.name}</span>
                                                     <span className="menu-price">{item.price.toLocaleString()}원</span>
                                                 </div>
+                                                {item.description && (
+                                                    <div style={{ fontSize: 11, color: '#aaa', marginTop: 2, fontStyle: 'italic', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {item.description}
+                                                    </div>
+                                                )}
                                             </Card>
                                         </Col>
                                     ))}

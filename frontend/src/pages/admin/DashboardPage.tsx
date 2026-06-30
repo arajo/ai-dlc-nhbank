@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Card, Row, Col, Tag, Button, Typography, message, Badge, Modal, List, Popconfirm, Space, DatePicker, Form, Input, InputNumber } from 'antd'
+import { Card, Row, Col, Tag, Button, Typography, message, Badge, Modal, List, Popconfirm, Space, DatePicker, Form, Input, InputNumber, Select } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
@@ -51,6 +51,7 @@ export default function DashboardPage() {
     const [modalOpen, setModalOpen] = useState(false)
     const [historyModalOpen, setHistoryModalOpen] = useState(false)
     const [historyData, setHistoryData] = useState<OrderHistory[]>([])
+    const [historyFilterTable, setHistoryFilterTable] = useState<number | null>(null)
     const [addTableModalOpen, setAddTableModalOpen] = useState(false)
     const [addTableForm] = Form.useForm()
     const { state: authState, dispatch } = useAuth()
@@ -289,53 +290,71 @@ export default function DashboardPage() {
             <Modal
                 title="전체 주문 이력"
                 open={historyModalOpen}
-                onCancel={() => setHistoryModalOpen(false)}
+                onCancel={() => { setHistoryModalOpen(false); setHistoryFilterTable(null) }}
                 footer={null}
                 width={700}
             >
-                <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text type="secondary">{historyData.length}건</Text>
+                <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                    <Select
+                        placeholder="테이블 번호 필터"
+                        allowClear
+                        style={{ width: 160 }}
+                        onChange={(value) => setHistoryFilterTable(value || null)}
+                        value={historyFilterTable}
+                    >
+                        {tables.map((t) => (
+                            <Select.Option key={t.id} value={t.id}>테이블 {t.number}</Select.Option>
+                        ))}
+                    </Select>
+                    <Text type="secondary">
+                        {(historyFilterTable ? historyData.filter(h => h.table_id === historyFilterTable) : historyData).length}건
+                    </Text>
                     {historyData.length > 0 && (
-                        <Text strong>합계: {historyData.reduce((sum, h) => sum + h.total_amount, 0).toLocaleString()}원</Text>
+                        <Text strong>
+                            합계: {(historyFilterTable ? historyData.filter(h => h.table_id === historyFilterTable) : historyData).reduce((sum, h) => sum + h.total_amount, 0).toLocaleString()}원
+                        </Text>
                     )}
                 </div>
 
-                {historyData.length === 0 ? (
-                    <Text type="secondary" style={{ display: 'block', textAlign: 'center', padding: 40 }}>
-                        주문 이력이 없습니다
-                    </Text>
-                ) : (
-                    <div style={{ maxHeight: 500, overflowY: 'auto' }}>
-                        <List
-                            dataSource={historyData}
-                            renderItem={(h) => {
-                                const items = JSON.parse(h.items_json)
-                                const tableInfo = tables.find((t) => t.id === h.table_id)
-                                return (
-                                    <Card size="small" style={{ marginBottom: 8 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <Tag color="blue">테이블 {tableInfo?.number || h.table_id}</Tag>
-                                                <Text strong>#{h.order_number}</Text>
+                {(() => {
+                    const filtered = historyFilterTable ? historyData.filter(h => h.table_id === historyFilterTable) : historyData
+                    return filtered.length === 0 ? (
+                        <Text type="secondary" style={{ display: 'block', textAlign: 'center', padding: 40 }}>
+                            주문 이력이 없습니다
+                        </Text>
+                    ) : (
+                        <div style={{ maxHeight: 500, overflowY: 'auto' }}>
+                            <List
+                                dataSource={filtered}
+                                renderItem={(h) => {
+                                    const items = JSON.parse(h.items_json)
+                                    const tableInfo = tables.find((t) => t.id === h.table_id)
+                                    return (
+                                        <Card size="small" style={{ marginBottom: 8 }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div>
+                                                    <Tag color="blue">테이블 {tableInfo?.number || h.table_id}</Tag>
+                                                    <Text strong>#{h.order_number}</Text>
+                                                </div>
+                                                <Text strong style={{ color: '#e74c3c' }}>{h.total_amount.toLocaleString()}원</Text>
                                             </div>
-                                            <Text strong style={{ color: '#e74c3c' }}>{h.total_amount.toLocaleString()}원</Text>
-                                        </div>
-                                        <div style={{ marginTop: 6 }}>
-                                            {items.map((item: any, i: number) => (
-                                                <Text key={i} type="secondary" style={{ display: 'block', fontSize: 13 }}>
-                                                    {item.menu_name} x{item.quantity} — {(item.unit_price * item.quantity).toLocaleString()}원
-                                                </Text>
-                                            ))}
-                                        </div>
-                                        <div style={{ marginTop: 4, fontSize: 11, color: '#999' }}>
-                                            주문: {new Date(h.ordered_at).toLocaleString()} | 완료: {new Date(h.completed_at).toLocaleString()}
-                                        </div>
-                                    </Card>
-                                )
-                            }}
-                        />
-                    </div>
-                )}
+                                            <div style={{ marginTop: 6 }}>
+                                                {items.map((item: any, i: number) => (
+                                                    <Text key={i} type="secondary" style={{ display: 'block', fontSize: 13 }}>
+                                                        {item.menu_name} x{item.quantity} — {(item.unit_price * item.quantity).toLocaleString()}원
+                                                    </Text>
+                                                ))}
+                                            </div>
+                                            <div style={{ marginTop: 4, fontSize: 11, color: '#999' }}>
+                                                주문: {new Date(h.ordered_at).toLocaleString()} | 완료: {new Date(h.completed_at).toLocaleString()}
+                                            </div>
+                                        </Card>
+                                    )
+                                }}
+                            />
+                        </div>
+                    )
+                })()}
             </Modal>
 
             {/* 테이블 추가 모달 */}

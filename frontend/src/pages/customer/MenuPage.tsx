@@ -228,7 +228,10 @@ export default function MenuPage() {
         <div className="menu-page" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
             {/* Left sidebar - 카테고리 (클릭 시 스크롤 이동) */}
             <div className="category-sidebar" style={{ width: 110, display: 'flex', flexDirection: 'column' }}>
-                <div style={{ padding: '20px 8px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ padding: '16px 8px', borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'center' }}>
+                    <Text style={{ color: '#ff6b35', fontSize: 18, fontWeight: 700 }}>테이블 {authState.tableNumber}</Text>
+                </div>
+                <div style={{ padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                     <Title level={5} style={{ margin: 0, textAlign: 'center', color: '#fff' }}>카테고리</Title>
                 </div>
                 <div style={{ flex: 1, overflowY: 'auto' }}>

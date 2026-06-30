@@ -118,6 +118,20 @@ async def delete_order(
     await sse_manager.broadcast(store_id, "order_deleted", order_info)
 
 
+@router.get("/history", response_model=list[OrderHistoryResponse])
+async def get_all_order_history(
+    start_date: str | None = Query(default=None),
+    end_date: str | None = Query(default=None),
+    admin: dict = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get all archived order history for the store (admin)."""
+    store_id = admin["sub"]
+    service = OrderService(db)
+    history = await service.get_all_history(store_id, start_date, end_date)
+    return history
+
+
 @router.get("/history/{table_id}", response_model=list[OrderHistoryResponse])
 async def get_order_history(
     table_id: int,

@@ -14,6 +14,7 @@ import AdminLoginPage from './pages/admin/LoginPage'
 import DashboardPage from './pages/admin/DashboardPage'
 import MenuManagePage from './pages/admin/MenuManagePage'
 import TableDetailPage from './pages/admin/TableDetailPage'
+import StoreManagePage from './pages/admin/StoreManagePage'
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                             <Route path="/admin/dashboard" element={<DashboardPage />} />
                             <Route path="/admin/menus" element={<MenuManagePage />} />
                             <Route path="/admin/tables/:tableId" element={<TableDetailPage />} />
+                            <Route path="/admin/stores" element={<StoreManagePage />} />
                             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
                             {/* Default */}

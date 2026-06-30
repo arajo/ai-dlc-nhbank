@@ -27,8 +27,10 @@ export default function MenuManagePage() {
     const [menus, setMenus] = useState<MenuItem[]>([])
     const [categories, setCategories] = useState<Category[]>([])
     const [modalOpen, setModalOpen] = useState(false)
+    const [categoryModalOpen, setCategoryModalOpen] = useState(false)
     const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
     const [form] = Form.useForm()
+    const [categoryForm] = Form.useForm()
     const { state: authState } = useAuth()
     const navigate = useNavigate()
 
@@ -80,6 +82,12 @@ export default function MenuManagePage() {
     }
 
     const columns = [
+        {
+            title: '이미지', dataIndex: 'image_url', key: 'image', width: 70,
+            render: (url: string | null) => url ? (
+                <img src={url} alt="" style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 6 }} />
+            ) : <div style={{ width: 50, height: 50, background: '#f0f0f0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🍽️</div>
+        },
         { title: '메뉴명', dataIndex: 'name', key: 'name' },
         { title: '가격', dataIndex: 'price', key: 'price', render: (v: number) => `${v.toLocaleString()}원` },
         { title: '카테고리', dataIndex: 'category_id', key: 'cat', render: (v: number) => categories.find((c) => c.id === v)?.name || '-' },
@@ -100,9 +108,14 @@ export default function MenuManagePage() {
             <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/admin/dashboard')} style={{ marginBottom: 16 }}>대시보드</Button>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                 <Title level={4}>메뉴 관리</Title>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingItem(null); form.resetFields(); setModalOpen(true) }} data-testid="add-menu-button">
-                    메뉴 추가
-                </Button>
+                <div>
+                    <Button onClick={() => setCategoryModalOpen(true)} style={{ marginRight: 8 }} data-testid="add-category-button">
+                        카테고리 추가
+                    </Button>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingItem(null); form.resetFields(); setModalOpen(true) }} data-testid="add-menu-button">
+                        메뉴 추가
+                    </Button>
+                </div>
             </div>
             <Table dataSource={menus} columns={columns} rowKey="id" pagination={false} data-testid="menu-table" />
 
@@ -124,6 +137,36 @@ export default function MenuManagePage() {
                     </Form.Item>
                     <Form.Item name="image_url" label="이미지 URL">
                         <Input data-testid="menu-form-image-url" />
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            {/* 카테고리 추가 모달 */}
+            <Modal
+                title="카테고리 추가"
+                open={categoryModalOpen}
+                onCancel={() => { setCategoryModalOpen(false); categoryForm.resetFields() }}
+                onOk={() => categoryForm.submit()}
+                okText="추가"
+                cancelText="취소"
+            >
+                <Form
+                    form={categoryForm}
+                    layout="vertical"
+                    onFinish={async (values) => {
+                        try {
+                            await api.post('/menus/categories', values)
+                            message.success('카테고리 추가 완료!')
+                            setCategoryModalOpen(false)
+                            categoryForm.resetFields()
+                            loadData()
+                        } catch (err: any) {
+                            message.error(err.detail || '카테고리 추가 실패')
+                        }
+                    }}
+                >
+                    <Form.Item name="name" label="카테고리명" rules={[{ required: true, message: '카테고리명을 입력하세요' }]}>
+                        <Input placeholder="예: 메인, 사이드, 음료" data-testid="category-form-name" />
                     </Form.Item>
                 </Form>
             </Modal>

@@ -33,3 +33,31 @@ class TableTokenResponse(TokenResponse):
     table_id: int
     store_id: str
     table_number: int
+
+
+class StoreCreateRequest(BaseModel):
+    """Create store request."""
+
+    id: str = Field(..., min_length=1, max_length=36)
+    name: str = Field(..., min_length=1, max_length=100)
+    username: str = Field(..., min_length=1, max_length=50)
+    password: str = Field(..., min_length=1, max_length=100)
+
+
+class StoreUpdateRequest(BaseModel):
+    """Update store request."""
+
+    id: str | None = Field(default=None, min_length=1, max_length=36)
+    name: str | None = Field(default=None, min_length=1, max_length=100)
+    username: str | None = Field(default=None, min_length=1, max_length=50)
+    password: str | None = Field(default=None, min_length=1, max_length=100)
+
+
+class StoreResponse(BaseModel):
+    """Store response."""
+
+    id: str
+    name: str
+    username: str
+
+    model_config = {"from_attributes": True}

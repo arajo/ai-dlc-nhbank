@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Card, Row, Col, Tag, Button, Typography, message, Badge, Modal, List, Popconfirm, Space, DatePicker, Form, Input, InputNumber } from 'antd'
-import { DeleteOutlined, HistoryOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
 import { useAuth } from '../../contexts/AuthContext'
@@ -51,7 +51,6 @@ export default function DashboardPage() {
     const [modalOpen, setModalOpen] = useState(false)
     const [historyModalOpen, setHistoryModalOpen] = useState(false)
     const [historyData, setHistoryData] = useState<OrderHistory[]>([])
-    const [historyDate, setHistoryDate] = useState<string>('')
     const [addTableModalOpen, setAddTableModalOpen] = useState(false)
     const [addTableForm] = Form.useForm()
     const { state: authState, dispatch } = useAuth()
@@ -144,16 +143,9 @@ export default function DashboardPage() {
 
     const loadAllHistory = async (dateStr?: string) => {
         try {
-            // 모든 테이블의 이력을 합침
-            const allHistory: OrderHistory[] = []
-            for (const table of tables) {
-                const params = dateStr ? `?start_date=${dateStr}&end_date=${dateStr}T23:59:59` : ''
-                const data = await api.get<OrderHistory[]>(`/orders/history/${table.id}${params}`)
-                allHistory.push(...data)
-            }
-            // 시간 역순 정렬
-            allHistory.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
-            setHistoryData(allHistory)
+            const params = dateStr ? `?start_date=${dateStr}&end_date=${dateStr}T23:59:59` : ''
+            const data = await api.get<OrderHistory[]>(`/orders/history${params}`)
+            setHistoryData(data)
             setHistoryModalOpen(true)
         } catch {
             message.error('이력 조회 실패')
@@ -171,13 +163,21 @@ export default function DashboardPage() {
 
     return (
         <div style={{ padding: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                <Title level={3}>주문 대시보드</Title>
-                <div>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddTableModalOpen(true)} style={{ marginRight: 8 }}>테이블 추가</Button>
-                    <Button icon={<HistoryOutlined />} onClick={() => loadAllHistory()} style={{ marginRight: 8 }}>주문 이력</Button>
-                    <Button onClick={() => navigate('/admin/menus')} style={{ marginRight: 8 }}>메뉴 관리</Button>
-                    <Button onClick={loadData} style={{ marginRight: 8 }}>새로고침</Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <Title level={3} style={{ margin: 0 }}>주문 대시보드</Title>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <DatePicker
+                        onChange={(_, dateStr) => {
+                            if (dateStr) loadAllHistory(dateStr as string)
+                            else loadAllHistory()
+                        }}
+                        placeholder="주문 이력 조회"
+                        allowClear
+                        style={{ width: 160 }}
+                    />
+                    <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddTableModalOpen(true)}>테이블 추가</Button>
+                    <Button onClick={() => navigate('/admin/menus')}>메뉴 관리</Button>
+                    <Button onClick={loadData}>새로고침</Button>
                     <Button danger onClick={() => { dispatch({ type: 'LOGOUT' }); navigate('/admin/login') }}>로그아웃</Button>
                 </div>
             </div>
@@ -293,23 +293,10 @@ export default function DashboardPage() {
                 footer={null}
                 width={700}
             >
-                <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <Text>날짜 선택:</Text>
-                    <DatePicker
-                        onChange={(_, dateStr) => {
-                            setHistoryDate(dateStr as string)
-                            if (dateStr) loadAllHistory(dateStr as string)
-                            else loadAllHistory()
-                        }}
-                        style={{ width: 200 }}
-                        placeholder="전체 기간"
-                        allowClear
-                    />
-                    <Text type="secondary">({historyData.length}건)</Text>
+                <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text type="secondary">{historyData.length}건</Text>
                     {historyData.length > 0 && (
-                        <Text strong style={{ marginLeft: 'auto' }}>
-                            합계: {historyData.reduce((sum, h) => sum + h.total_amount, 0).toLocaleString()}원
-                        </Text>
+                        <Text strong>합계: {historyData.reduce((sum, h) => sum + h.total_amount, 0).toLocaleString()}원</Text>
                     )}
                 </div>
 

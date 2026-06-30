@@ -24,8 +24,15 @@
 - 주문 상태 변경 (대기중 → 준비중 → 완료)
 - 주문 삭제 (직권 수정)
 - 테이블 이용 완료 처리 (세션 종료 + 이력 이동)
-- 메뉴 CRUD 관리
-- 날짜별 전체 주문 이력 조회
+- 테이블 추가/관리
+- 메뉴 CRUD 관리 (이미지 미리보기 포함)
+- 카테고리 추가
+- 날짜별 전체 주문 이력 조회 (상단 DatePicker)
+
+### 🔑 슈퍼관리자용
+- 매장 등록 (ID 직접 지정)
+- 매장 수정 (ID, 이름, 사용자명, 비밀번호 변경)
+- 전체 매장 목록 + 매장별 테이블 조회
 
 ## 기술 스택
 
@@ -99,6 +106,8 @@ npm run dev
 |--------|-----|
 | 고객용 | http://localhost:5173/customer/login |
 | 관리자용 | http://localhost:5173/admin/login |
+| 매장 관리 (슈퍼관리자) | http://localhost:5173/admin/stores |
+| 메뉴 관리 | http://localhost:5173/admin/menus |
 | API 문서 | http://localhost:8000/docs |
 | 헬스체크 | http://localhost:8000/api/health |
 
@@ -116,10 +125,15 @@ npm run dev
 ### 인증
 - `POST /api/auth/admin/login` — 관리자 로그인
 - `POST /api/auth/table/login` — 테이블 로그인
+- `POST /api/auth/stores` — 매장 등록 (슈퍼관리자)
+- `PUT /api/auth/stores/{id}` — 매장 수정 (슈퍼관리자)
+- `GET /api/auth/stores` — 매장 목록 조회
+- `GET /api/auth/stores/{id}/tables` — 매장별 테이블 조회
 
 ### 메뉴
 - `GET /api/menus` — 메뉴 조회
 - `GET /api/menus/categories` — 카테고리 조회
+- `POST /api/menus/categories` — 카테고리 등록 (관리자)
 - `POST /api/menus` — 메뉴 등록 (관리자)
 - `PUT /api/menus/{id}` — 메뉴 수정 (관리자)
 - `DELETE /api/menus/{id}` — 메뉴 삭제 (관리자)
@@ -130,7 +144,8 @@ npm run dev
 - `GET /api/orders/active` — 전체 활성 주문 (관리자)
 - `PATCH /api/orders/{id}/status` — 상태 변경 (관리자)
 - `DELETE /api/orders/{id}` — 주문 삭제 (관리자)
-- `GET /api/orders/history/{table_id}` — 과거 이력 (관리자)
+- `GET /api/orders/history` — 전체 주문 이력 (관리자, 날짜 필터)
+- `GET /api/orders/history/{table_id}` — 테이블별 이력 (관리자)
 
 ### 테이블
 - `POST /api/tables` — 테이블 설정 (관리자)

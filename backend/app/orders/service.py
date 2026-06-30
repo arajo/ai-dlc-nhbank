@@ -187,6 +187,24 @@ class OrderService:
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
+    async def get_all_history(
+        self,
+        store_id: str,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> list[OrderHistory]:
+        """Get all archived order history for a store."""
+        query = select(OrderHistory).where(OrderHistory.store_id == store_id)
+
+        if start_date:
+            query = query.where(OrderHistory.completed_at >= start_date)
+        if end_date:
+            query = query.where(OrderHistory.completed_at <= end_date)
+
+        query = query.order_by(OrderHistory.completed_at.desc())
+        result = await self.db.execute(query)
+        return list(result.scalars().all())
+
     # --- Helpers ---
 
     async def _get_table(self, store_id: str, table_id: int) -> Table:

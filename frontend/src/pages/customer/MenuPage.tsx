@@ -52,7 +52,7 @@ export default function MenuPage() {
     const scrollRef = useRef<HTMLDivElement>(null)
     const sectionRefs = useRef<Record<number, HTMLDivElement | null>>({})
     const { state: cartState, dispatch: cartDispatch } = useCart()
-    const { state: authState } = useAuth()
+    const { state: authState, dispatch } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -262,6 +262,19 @@ export default function MenuPage() {
                     data-testid="order-history-link"
                 >
                     주문내역
+                </Button>
+                <Button
+                    type="text"
+                    onClick={() => {
+                        cartDispatch({ type: 'CLEAR' })
+                        localStorage.removeItem('sessionId')
+                        dispatch({ type: 'LOGOUT' })
+                        navigate('/customer/login')
+                    }}
+                    style={{ margin: '0 8px 8px 8px', fontSize: 12, color: '#666' }}
+                    data-testid="customer-logout"
+                >
+                    로그아웃
                 </Button>
             </div>
 

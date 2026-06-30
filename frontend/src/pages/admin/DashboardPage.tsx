@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { Card, Row, Col, Tag, Button, Typography, message, Badge, Modal, List, Popconfirm, Space, DatePicker } from 'antd'
-import { DeleteOutlined, HistoryOutlined } from '@ant-design/icons'
+import { Card, Row, Col, Tag, Button, Typography, message, Badge, Modal, List, Popconfirm, Space, DatePicker, Form, Input, InputNumber } from 'antd'
+import { DeleteOutlined, HistoryOutlined, PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
 import { useAuth } from '../../contexts/AuthContext'
@@ -52,6 +52,8 @@ export default function DashboardPage() {
     const [historyModalOpen, setHistoryModalOpen] = useState(false)
     const [historyData, setHistoryData] = useState<OrderHistory[]>([])
     const [historyDate, setHistoryDate] = useState<string>('')
+    const [addTableModalOpen, setAddTableModalOpen] = useState(false)
+    const [addTableForm] = Form.useForm()
     const { state: authState, dispatch } = useAuth()
     const navigate = useNavigate()
     const eventSourceRef = useRef<EventSource | null>(null)
@@ -128,6 +130,18 @@ export default function DashboardPage() {
         }
     }
 
+    const addTable = async (values: { table_number: number; password: string }) => {
+        try {
+            await api.post('/tables', values)
+            message.success(`테이블 ${values.table_number} 추가 완료`)
+            setAddTableModalOpen(false)
+            addTableForm.resetFields()
+            loadData()
+        } catch (err: any) {
+            message.error(err.detail || '테이블 추가 실패')
+        }
+    }
+
     const loadAllHistory = async (dateStr?: string) => {
         try {
             // 모든 테이블의 이력을 합침
@@ -160,6 +174,7 @@ export default function DashboardPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                 <Title level={3}>주문 대시보드</Title>
                 <div>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddTableModalOpen(true)} style={{ marginRight: 8 }}>테이블 추가</Button>
                     <Button icon={<HistoryOutlined />} onClick={() => loadAllHistory()} style={{ marginRight: 8 }}>주문 이력</Button>
                     <Button onClick={() => navigate('/admin/menus')} style={{ marginRight: 8 }}>메뉴 관리</Button>
                     <Button onClick={loadData} style={{ marginRight: 8 }}>새로고침</Button>
@@ -334,6 +349,25 @@ export default function DashboardPage() {
                         />
                     </div>
                 )}
+            </Modal>
+
+            {/* 테이블 추가 모달 */}
+            <Modal
+                title="테이블 추가"
+                open={addTableModalOpen}
+                onCancel={() => { setAddTableModalOpen(false); addTableForm.resetFields() }}
+                onOk={() => addTableForm.submit()}
+                okText="추가"
+                cancelText="취소"
+            >
+                <Form form={addTableForm} layout="vertical" onFinish={addTable} data-testid="add-table-form">
+                    <Form.Item name="table_number" label="테이블 번호" rules={[{ required: true, message: '테이블 번호를 입력하세요' }]}>
+                        <InputNumber min={1} style={{ width: '100%' }} placeholder="예: 4" data-testid="add-table-number" />
+                    </Form.Item>
+                    <Form.Item name="password" label="테이블 비밀번호" rules={[{ required: true, message: '비밀번호를 입력하세요' }]}>
+                        <Input.Password placeholder="고객이 로그인할 때 사용하는 비밀번호" data-testid="add-table-password" />
+                    </Form.Item>
+                </Form>
             </Modal>
         </div>
     )

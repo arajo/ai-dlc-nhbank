@@ -169,12 +169,12 @@ export default function DashboardPage() {
                     <DatePicker
                         onChange={(_, dateStr) => {
                             if (dateStr) loadAllHistory(dateStr as string)
-                            else loadAllHistory()
                         }}
-                        placeholder="주문 이력 조회"
+                        placeholder="날짜별 이력"
                         allowClear
-                        style={{ width: 160 }}
+                        style={{ width: 150 }}
                     />
+                    <Button onClick={() => loadAllHistory()}>전체 이력</Button>
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddTableModalOpen(true)}>테이블 추가</Button>
                     <Button onClick={() => navigate('/admin/menus')}>메뉴 관리</Button>
                     <Button onClick={loadData}>새로고침</Button>

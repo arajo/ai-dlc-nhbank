@@ -140,6 +140,117 @@ npm run dev
 ### 실시간
 - `GET /api/sse/orders` — 주문 이벤트 스트림 (SSE)
 
+## ERD (Entity Relationship Diagram)
+
+```mermaid
+erDiagram
+    Store ||--o{ Table : has
+    Store ||--o{ Category : has
+    Store ||--o{ MenuItem : has
+    Store ||--o{ Order : has
+    Store ||--o{ LoginAttempt : tracks
+
+    Table ||--o{ TableSession : has
+    Table ||--o{ Order : receives
+
+    TableSession ||--o{ Order : contains
+
+    Category ||--o{ MenuItem : contains
+
+    Order ||--o{ OrderItem : includes
+
+    Store {
+        string id PK
+        string name
+        string username
+        string password_hash
+        datetime created_at
+    }
+
+    Table {
+        int id PK
+        string store_id FK
+        int number
+        string password_hash
+        string current_session_id
+        boolean is_active
+    }
+
+    TableSession {
+        string id PK
+        string store_id FK
+        int table_id FK
+        datetime started_at
+        datetime ended_at
+        boolean is_active
+    }
+
+    Category {
+        int id PK
+        string store_id FK
+        string name
+        int sort_order
+    }
+
+    MenuItem {
+        int id PK
+        string store_id FK
+        int category_id FK
+        string name
+        int price
+        string description
+        string image_url
+        int sort_order
+        boolean is_active
+    }
+
+    Order {
+        int id PK
+        string store_id FK
+        int table_id FK
+        string session_id FK
+        string order_number
+        enum status
+        int total_amount
+        datetime created_at
+    }
+
+    OrderItem {
+        int id PK
+        int order_id FK
+        string menu_name
+        int quantity
+        int unit_price
+    }
+
+    OrderHistory {
+        int id PK
+        string store_id
+        int table_id
+        string session_id
+        string order_number
+        text items_json
+        int total_amount
+        datetime ordered_at
+        datetime completed_at
+    }
+
+    OrderCounter {
+        int id PK
+        string store_id
+        string date
+        int counter
+    }
+
+    LoginAttempt {
+        int id PK
+        string store_id
+        int attempt_count
+        datetime locked_until
+        datetime last_attempt_at
+    }
+```
+
 ## 설계 문서
 
 상세 설계 문서는 `aidlc-docs/` 폴더에 있습니다:

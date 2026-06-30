@@ -1,0 +1,244 @@
+/* Global styles - 테이블오더 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* 고객 메뉴 페이지 스타일링 */
+.menu-page {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: relative;
+}
+
+/* 배경 이모지 장식 */
+.menu-page::before {
+  content: '🍜 🍖 🍺 🥘 🍳 🥗 🍕 🍣 🥂 🍲 🍛 🧆 🫕 🍤 🥟';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 28px;
+  line-height: 80px;
+  letter-spacing: 40px;
+  word-spacing: 20px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  white-space: normal;
+  padding: 20px;
+}
+
+.menu-page>* {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-page .category-sidebar {
+  background: rgba(20, 20, 35, 0.95);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menu-page .category-item {
+  color: #aaa;
+  transition: all 0.2s ease;
+}
+
+.menu-page .category-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-page .category-item.active {
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.1);
+  border-left: 3px solid #ff6b35;
+  font-weight: 700;
+}
+
+.menu-page .menu-content {
+  background: rgba(15, 15, 25, 0.9);
+}
+
+.menu-page .menu-header {
+  background: rgba(20, 20, 35, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menu-page .menu-header h4 {
+  color: #fff;
+}
+
+.menu-page .section-title {
+  color: #ff6b35;
+  border-bottom: 2px solid #ff6b35;
+  display: inline-block;
+  padding-bottom: 4px;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.menu-page .section-title::before {
+  margin-right: 8px;
+}
+
+/* 장바구니 빈 상태 이모지 */
+.cart-empty-icon {
+  font-size: 48px;
+  display: block;
+  text-align: center;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+/* 카드 그리드 영역 미세한 빛 효과 */
+.menu-scroll {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(100, 149, 237, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 215, 0, 0.02) 0%, transparent 50%);
+}
+
+/* 메뉴 카드 - 어두운 배경에서 음식 부각 */
+.menu-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  background: #2a2a3e;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+}
+
+.menu-card .ant-card-cover img {
+  border-radius: 12px 12px 0 0;
+  transition: transform 0.3s ease;
+}
+
+.menu-card:hover .ant-card-cover img {
+  transform: scale(1.05);
+}
+
+.menu-card .ant-card-body {
+  background: #2a2a3e;
+  padding: 10px 12px !important;
+}
+
+.menu-card .menu-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.menu-card .menu-price {
+  color: #ff6b35;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* 장바구니 사이드바 */
+.cart-sidebar {
+  background: rgba(25, 25, 40, 0.98);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cart-sidebar h5 {
+  color: #fff;
+}
+
+.cart-sidebar .ant-list-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.cart-sidebar .cart-item-name {
+  color: #eee;
+  font-weight: 500;
+}
+
+.cart-sidebar .cart-item-price {
+  color: #ff6b35;
+}
+
+.cart-sidebar .cart-total {
+  color: #fff;
+  font-size: 18px;
+}
+
+.cart-sidebar .cart-total-amount {
+  color: #ff6b35;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 주문 버튼 */
+.order-button {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7421e 100%);
+  border: none;
+  border-radius: 8px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+  transition: all 0.2s ease;
+}
+
+.order-button:hover {
+  background: linear-gradient(135deg, #ff7f50 0%, #ff5722 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+}
+
+/* 알림 벨 */
+.notification-bell {
+  color: #ff6b35;
+  border-color: rgba(255, 107, 53, 0.5);
+  background: rgba(255, 107, 53, 0.1);
+}
+
+.notification-bell:hover {
+  color: #fff;
+  border-color: #ff6b35;
+  background: rgba(255, 107, 53, 0.3);
+}
+
+/* 스크롤바 커스텀 */
+.menu-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 주문내역 버튼 */
+.order-history-btn {
+  color: #aaa;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+
+.order-history-btn:hover {
+  color: #ff6b35;
+  border-color: #ff6b35;
+}
